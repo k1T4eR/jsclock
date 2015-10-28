@@ -7,12 +7,13 @@ function defineAccessors(object, property) {
         return this[property];
     };
 
-    var callback = 'on' + capitalize(property) + 'Change';
+    var callbackProperty = 'on' + capitalize(property) + 'Change';
     object['set' + capitalize(property)] = function(newValue) {
         var changed = this[property] !== newValue;
         if (changed) {
             this[property] = newValue;
-            this[callback] && this[callback](this, newValue);
+            var callback = this[callbackProperty];
+            if (callback) { callback(this, newValue) }
         }
         return this;
     };
@@ -70,22 +71,10 @@ function initializeClockWidget() {
 
     setInterval(function() {
         var date = new Date();
-        clock.setHours(date.getHours());
-    }, 1000 * 60 * 60);
-
-    setInterval(function() {
-        var date = new Date();
-        clock.setMinutes(date.getMinutes());
-    }, 1000 * 60);
-
-    setInterval(function() {
-        var date = new Date();
-        clock.setSeconds(date.getSeconds());
-    }, 1000);
-
-    setInterval(function() {
-        var date = new Date();
         clock.setMilliseconds(date.getMilliseconds());
+        clock.setSeconds(date.getSeconds());
+        clock.setMinutes(date.getMinutes());
+        clock.setHours(date.getHours());
     }, 4);
 }
 
